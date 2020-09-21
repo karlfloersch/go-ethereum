@@ -139,6 +139,9 @@ func New(ctx *node.ServiceContext, config *Config) (*Ethereum, error) {
 		return nil, err
 	}
 	chainConfig, genesisHash, genesisErr := core.SetupGenesisBlockWithOverride(chainDb, config.Genesis, config.OverrideIstanbul, config.OverrideMuirGlacier)
+	// Hacky way to set the OVM's WhitelistedDeploymentAddress in the chain config
+	chainConfig.WhitelistedDeploymentAddress = config.WhitelistedDeploymentAddress
+
 	if _, ok := genesisErr.(*params.ConfigCompatError); genesisErr != nil && !ok {
 		return nil, genesisErr
 	}

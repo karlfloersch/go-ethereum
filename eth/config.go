@@ -160,4 +160,7 @@ type Config struct {
 
 	// MuirGlacier block override (TODO: remove after the fork)
 	OverrideMuirGlacier *big.Int
+
+	// Whitelisted Deployment Address for OVM
+	WhitelistedDeploymentAddress *common.Address `json:"whitelistedDeploymentAddress,omitempty"`
 }

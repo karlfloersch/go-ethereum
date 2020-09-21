@@ -55,6 +55,10 @@ var (
 	gitDate   = ""
 	// The app that holds all commands and flags.
 	app = utils.NewApp(gitCommit, gitDate, "the go-ethereum command line interface")
+
+	optimismFlags = []cli.Flag{
+		utils.WhitelistedDeploymentAccountFlag,
+	}
 	// flags that configure the node
 	nodeFlags = []cli.Flag{
 		utils.IdentityFlag,
@@ -225,6 +229,7 @@ func init() {
 	}
 	sort.Sort(cli.CommandsByName(app.Commands))
 
+	app.Flags = append(app.Flags, optimismFlags...)
 	app.Flags = append(app.Flags, nodeFlags...)
 	app.Flags = append(app.Flags, rpcFlags...)
 	app.Flags = append(app.Flags, consoleFlags...)

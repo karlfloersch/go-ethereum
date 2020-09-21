@@ -749,6 +749,13 @@ var (
 		Usage: "External EVM configuration (default = built-in interpreter)",
 		Value: "",
 	}
+
+	// OVM Settings
+	WhitelistedDeploymentAccountFlag = cli.StringFlag{
+		Name:  "optimism.whitelisteddeployaccount",
+		Usage: "Whitelisted Deployment Account (default = any account can deploy)",
+		Value: "",
+	}
 )
 
 // MakeDataDir retrieves the currently requested data directory, terminating
@@ -1429,6 +1436,16 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *eth.Config) {
 	setMiner(ctx, &cfg.Miner)
 	setWhitelist(ctx, cfg)
 	setLes(ctx, cfg)
+	// Set whitelisted deployment address
+	if ctx.GlobalIsSet(WhitelistedDeploymentAccountFlag.Name) {
+		address := ctx.GlobalString(WhitelistedDeploymentAccountFlag.Name)
+		if common.IsHexAddress(address) || address == "" {
+			addr := common.HexToAddress(address)
+			cfg.WhitelistedDeploymentAddress = &addr
+		} else {
+			Fatalf("Whitelisted Deployment Address %s is not a valid address.", address)
+		}
+	}
 
 	if ctx.GlobalIsSet(SyncModeFlag.Name) {
 		cfg.SyncMode = *GlobalTextMarshaler(ctx, SyncModeFlag.Name).(*downloader.SyncMode)
